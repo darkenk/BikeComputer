@@ -20,7 +20,7 @@
  *  Component's initialization
  */
 void init(void) {
-	LCD_Initalize();			        // LCD Display	
+    LCD_Initalize();                    // LCD Display	
 }
 
 int main(void)
