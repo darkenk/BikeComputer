@@ -20,31 +20,31 @@
  *  Component's initialization
  */
 void init(void) {
-	LCD_Initalize();			// LCD Display	
+	LCD_Initalize();			        // LCD Display	
 }
 
 int main(void)
 {
-	init();
-	
-	LCD_GoTo(0, 0);						// Set cursor to first char in first line
-	LCD_WriteText("-= LCD READY =-");	// Display sample text
-	unsigned i;
-	
+    init();
+    
+    LCD_GoTo(0, 0);                     // Set cursor to first char in first line
+    LCD_WriteText("-= LCD READY =-");   // Display sample text
+    unsigned i;
+    
     while(1)
     {
-		LCD_GoTo(0, 1);			// Set cursor to first char in second line
-	    for(i = 0; i < 16; ++i)
-		{
-			LCD_WriteText(">");
-			_delay_ms(500);
-		}
+        LCD_GoTo(0, 1);                 // Set cursor to first char in second line
+        for(i = 0; i < 16; ++i)
+        {
+            LCD_WriteText(">");
+            _delay_ms(500);
+        }
 		
-		LCD_GoTo(0, 1);		
-		for(i = 0; i < 16; ++i)
-		{
-		    LCD_WriteText(" ");
-			_delay_ms(500);	
-		}
+        LCD_GoTo(0, 1);		
+        for(i = 0; i < 16; ++i)
+        {
+            LCD_WriteText(" ");
+            _delay_ms(500);	
+        }
     }
 }
