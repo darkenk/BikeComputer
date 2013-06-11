@@ -17,9 +17,10 @@
 # error "F_CPU freq is too high"
 #endif
 
-#define CLOCK_START_VALUE 156
+#define CLOCK_TICK (1024UL/(F_CPU/1000000UL))
+#define CLOCK_START_VALUE 246
 
-// current time has precission 0.1s
+// current time precision is 0.001s
 // time is zeroed after 23:59
 clock g_clock = {
     .current_time = 0,
@@ -29,9 +30,9 @@ clock g_clock = {
     .handle_second = 0,
     .handle_minute = 0
 };
-// delta has precission 0.0001s
+// delta precision is 0.001ms
 volatile uint16_t delta = 0;
-volatile uint8_t ms = 0;
+volatile uint16_t ms = 0;
 
 inline void init_clock()
 {
@@ -47,7 +48,7 @@ inline void set_clock(uint8_t _hour, uint8_t _minute)
     g_clock.current_hour = _hour;
     g_clock.current_minute = _minute;
     g_clock.current_second = 0;
-    g_clock.current_time = _hour * 36000 + _minute * 600;
+    g_clock.current_time = _hour * 3600000 + _minute * 60000;
     TCNT0 = CLOCK_START_VALUE;
     sei();
 }
@@ -55,14 +56,14 @@ inline void set_clock(uint8_t _hour, uint8_t _minute)
 ISR(TIMER0_OVF_vect)
 {
     TCNT0 = CLOCK_START_VALUE;
-    delta += 102400 / (F_CPU/100000);
-    while (delta > 10000) {
+    delta += (256 - CLOCK_START_VALUE) * CLOCK_TICK;
+    while (delta > 1000) {
         g_clock.current_time++;
-        delta -= 10000;
+        delta -= 1000;
         ms++;
     }
-    while (ms >= 10) {
-        ms -= 10;
+    while (ms >= 1000) {
+        ms -= 1000;
         g_clock.current_second++;
         if (g_clock.current_second == 60) {
             g_clock.current_second = 0;
