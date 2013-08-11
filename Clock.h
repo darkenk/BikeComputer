@@ -25,4 +25,11 @@ extern void init_clock();
 
 extern void set_clock(uint8_t _hour, uint8_t _minute);
 
+/**
+ * Returns clock value in string. String format: HH:MM:SS
+ * @brief get_time_str
+ * @param out_buf
+ */
+extern void get_time_str(char* out_buf);
+
 #endif /* CLOCK_H_ */

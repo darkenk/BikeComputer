@@ -7,6 +7,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <stdlib.h>
 #include "Clock.h"
 
 #ifndef F_CPU
@@ -51,6 +52,27 @@ inline void set_clock(uint8_t _hour, uint8_t _minute)
     g_clock.current_time = _hour * 3600000 + _minute * 60000;
     TCNT0 = CLOCK_START_VALUE;
     sei();
+}
+
+void get_time_str(char* out_buf)
+{
+    int i = 0;
+    if (g_clock.current_hour < 10) {
+        out_buf[i++] = '0';
+    }
+    utoa(g_clock.current_hour, &out_buf[i],10);
+    out_buf[2] = ':';
+    i = 3;
+    if (g_clock.current_minute < 10) {
+        out_buf[i++] = '0';
+    }
+    utoa(g_clock.current_minute, &out_buf[i],10);
+    out_buf[5] = ':';
+    i = 6;
+    if (g_clock.current_second < 10) {
+        out_buf[i++] = '0';
+    }
+    utoa(g_clock.current_second, &out_buf[i], 10);
 }
 
 ISR(TIMER0_OVF_vect)
