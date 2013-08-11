@@ -10,23 +10,15 @@
  *   RS:                    PB2
  *   E:                     PB3
  *   DB4-7:                 PB4-7
- */ 
-#define F_CPU 1000000UL
+ */
 
 #include <avr/io.h>
 #include "HD44780.h"
 
-/*
- *  Component's initialization
- */
-void init(void) {
-    LCD_Initalize();                    // LCD Display	
-}
-
 int main(void)
 {
-    init();
-    
+    LCD_Initalize();
+
     LCD_GoTo(0, 0);                     // Set cursor to first char in first line
     LCD_WriteText("-= LCD READY =-");   // Display sample text
     unsigned i;
