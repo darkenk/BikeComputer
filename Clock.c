@@ -29,7 +29,7 @@ clock g_clock = {
     .current_minute = 0,
     .current_second = 0,
     .handle_second = 0,
-    .handle_minute = 0
+    .handle_milisec = 0
 };
 // delta precision is 0.001ms
 volatile uint16_t delta = 0;
@@ -40,7 +40,6 @@ inline void init_clock()
     TIMSK |= (1 << TOIE0);
     TCCR0 |= (1 << CS02) | (1 << CS00);
     TCNT0 = CLOCK_START_VALUE;
-    sei();
 }
 
 inline void set_clock(uint8_t _hour, uint8_t _minute)
@@ -83,6 +82,9 @@ ISR(TIMER0_OVF_vect)
         g_clock.current_time++;
         delta -= 1000;
         ms++;
+        if (g_clock.handle_milisec) {
+            g_clock.handle_milisec();
+        }
     }
     while (ms >= 1000) {
         ms -= 1000;
@@ -96,9 +98,6 @@ ISR(TIMER0_OVF_vect)
                 if (g_clock.current_hour == 24) {
                     g_clock.current_hour = 0;
                     g_clock.current_time = 0;
-                }
-                if (g_clock.handle_minute) {
-                    g_clock.handle_minute();
                 }
             }
         }

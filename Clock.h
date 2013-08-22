@@ -14,7 +14,7 @@ struct _clock {
     uint8_t current_minute;
     uint8_t current_second;
     void (*handle_second)();
-    void (*handle_minute)();
+    void (*handle_milisec)();
 };
 
 typedef struct _clock clock;
