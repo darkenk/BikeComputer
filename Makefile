@@ -2,8 +2,8 @@ TARGET_PLATFORM=atmega32
 CC=avr-gcc
 CFLAGS=-Wall -DF_CPU=1000000UL -I/usr/lib/avr/include/ -mmcu=$(TARGET_PLATFORM) -std=gnu99 -Os
 LDFLAGS=
-SOURCES=BikeComputer.c Clock.c HD44780.c msg_queue.c keypad.c
-HEADERS=BikeComputer.h Clock.h HD44780.h list.h msg_queue.h keypad.h
+SOURCES=BikeComputer.c Clock.c HD44780.c msg_queue.c keypad.c speedometer.c
+HEADERS=BikeComputer.h Clock.h HD44780.h list.h msg_queue.h keypad.h speedometer.h
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=bike_computer
 OUTPUT_HEX=bike_computer.hex

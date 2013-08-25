@@ -20,6 +20,7 @@
 #include "msg_queue.h"
 #include "utils.h"
 #include "keypad.h"
+#include "speedometer.h"
 
 void milisec_handler();
 void second_handler();
@@ -45,18 +46,11 @@ int main(void)
 
     char clock_value[9];
     clock_value[8] = 0;
-
-    LCD_GoTo(0,1);
+    char speed_value[9];
+    speed_value[8] = 0;
 
     msg_t* msg = 0;
-
-    char allocs_b[15];
-    allocs_b[0] = 0;
-    allocs_b[1] = 0;
-    allocs_b[2] = 0;
-    allocs_b[8] = 0;
-    allocs_b[14] = 0;
-    int i = 0;
+    uint32_t time;
 
     while(1) {
         while((msg = get_msg())) {
@@ -65,18 +59,23 @@ int main(void)
                 LCD_GoTo(0,1);
                 get_time_str(clock_value);
                 LCD_WriteText(clock_value);
+
+                LCD_GoTo(0, 0);
+                LCD_WriteText("S:      \0");
+                calculate_speed();
+                get_current_speed(speed_value);
+                LCD_GoTo(2, 0);
+                LCD_WriteText(speed_value);
                 break;
 
             case MSG_MILISEC_CHANGE:
                 break;
 
             case MSG_INPUT:
-                LCD_GoTo(10, 1);
-                if (i++%2) {
-                    LCD_WriteText("a\0");
-                } else {
-                    LCD_WriteText("b\0");
+                ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
+                    time = g_clock.current_time;
                 }
+                set_tick(time);
                 break;
 
             default:
