@@ -48,6 +48,8 @@ int main(void)
     clock_value[8] = 0;
     char speed_value[9];
     speed_value[8] = 0;
+    char keys[8];
+    keys[7] = 0;
 
     msg_t* msg = 0;
     uint32_t time;
@@ -75,6 +77,8 @@ int main(void)
                 ATOMIC_BLOCK(ATOMIC_RESTORESTATE) {
                     time = g_clock.current_time;
                 }
+                LCD_GoTo(9, 0);
+                LCD_WriteText(itoa(msg->size, keys, 16));
                 set_tick(time);
                 break;
 

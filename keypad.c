@@ -13,14 +13,27 @@
 
 #define DEBOUNCE_TIME 232;
 
+#define KEY_MASK 0x07
+
 void init_keypad()
 {
     CLEAR_BIT(DDRD, DDD2);     // Clear the PD2 pin
     // PD2 (INT0 pin) is now an input
     SET_BIT(PORTD, PORTD2);    // turn On the Pull-up
     SET_BIT(GICR, INT0);
-    SET_BIT(MCUCR, ISC01);
+    // INT0 is triggered by falling edge
+    CLEAR_BIT(MCUCR, ISC01);
     SET_BIT(MCUCR, ISC00);
+
+    // disable jtag interface
+    // yes, it is needed to be executed twice
+    SET_BIT(MCUCSR, JTD);
+    SET_BIT(MCUCSR, JTD);
+
+    // set pins (PC0, PC1, PC2) as input
+    SET_BITS(DDRC, KEY_MASK);
+    // turn on the pull-up resistor
+    SET_BITS(PORTC, KEY_MASK);
 
     // Set prescaler to 1024
     SET_BIT(TCCR2, CS22);
@@ -38,8 +51,9 @@ ISR(INT0_vect)
 ISR(TIMER2_OVF_vect)
 {
     CLEAR_BIT(TIMSK,TOIE2);
-    if (IS_BIT_SET(PIND, DDD2)) {
-        append_msg(MSG_INPUT, 0, 0);
+    if (!IS_BIT_SET(PIND, DDD2)) {
+        int btn = (~PINC & KEY_MASK) >> 1;
+        append_msg(MSG_INPUT, btn, 0);
     }
     SET_BIT(GICR, INT0);
 }
