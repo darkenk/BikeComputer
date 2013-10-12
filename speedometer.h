@@ -5,7 +5,7 @@
 
 void set_circumference(uint32_t circumference);
 
-void calculate_speed();
+uint32_t calculate_speed();
 
 void get_current_speed(char* buffer);
 

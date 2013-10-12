@@ -28,7 +28,7 @@ speedometer g_speedometer = {
     .show_time = 0
 };
 
-void calculate_speed()
+uint32_t calculate_speed()
 {
     uint32_t diff = g_speedometer.last_tick - g_speedometer.prev_last_tick;
     if (diff) {
@@ -41,6 +41,7 @@ void calculate_speed()
             g_speedometer.show_time = 0;
         }
     }
+    return g_speedometer.speed;
 }
 
 void set_circumference(uint32_t circumference)
